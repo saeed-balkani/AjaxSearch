@@ -1,0 +1,56 @@
+﻿@model IEnumerable<AjaxSearch.Models.Student>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<div class="container">
+    <br />
+    <div>
+            <input type="text" id="txtsearch" placeholder="نام یک دانش آموز وارد کنید" />
+        
+        <br />
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="text-align:center">نام دانش آموز</th>
+                </tr>
+            </thead>
+            <tbody id="DataSearching">
+                
+                @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>@item.FullName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--Start ajax-->
+<script>
+    $("#txtsearch").on("keyup", function () {
+        var txtsearch = $(this).val();
+        var SetData = $("#DataSearching");
+        SetData.html("");
+        $.ajax({
+            url: "/Home/search?txtsearch=" ,
+            type: "Post",
+            data:{SearchValue :txtsearch },
+            success : function (result){
+
+            }
+        }).done(function (result) {
+            $.each(result, function (index, value) {
+                var Data = "<tr>" +
+                    "<td>" + value.FullName + "</td>" +
+                    "</tr>";
+                SetData.append(Data);
+
+            });
+        });
+    });
+</script>
